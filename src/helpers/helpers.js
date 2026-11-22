@@ -1,0 +1,31 @@
+export const haversine = (a, b) => {
+  const R = 6371000;
+  const toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(b[0] - a[0]);
+  const dLng = toRad(b[1] - a[1]);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a[0])) * Math.cos(toRad(b[0])) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+};
+
+export const totalDistance = (path) =>
+  path.reduce((sum, p, i) => (i === 0 ? 0 : sum + haversine(path[i - 1], p)), 0);
+
+export const formatDuration = (s) => {
+  const m = Math.floor(s / 60).toString().padStart(2, '0');
+  const sec = Math.floor(s % 60).toString().padStart(2, '0');
+  return `${m}:${sec}`;
+};
+
+export const formatPace = (distanceM, seconds) => {
+  if (distanceM < 10) return '--:--';
+  return formatDuration(seconds / (distanceM / 1000)) + ' /km';
+};
+
+export const formatDate = (iso) =>
+  new Date(iso).toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
