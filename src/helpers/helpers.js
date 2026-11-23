@@ -29,3 +29,12 @@ export const formatDate = (iso) =>
     month: 'short',
     year: 'numeric',
   });
+
+export const dayKey = (d) => new Date(d).toLocaleDateString("en-CA"); // YYYY-MM-DD local
+
+export const tempoLabel = (avg) => {
+  if (avg == null) return "Sin datos";
+  if (avg < 1) return "Muy rápido";
+  if (avg > 4) return "Muy lento";
+  return "Buen ritmo";
+};

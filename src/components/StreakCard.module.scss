@@ -1,0 +1,54 @@
+.card {
+  background: #fff;
+  border: 1px solid #e5e3ef;
+  border-radius: 20px;
+  margin: 16px;
+  padding: 16px;
+}
+.top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.flame {
+  font-size: 44px;
+  color: #c4b5fd;
+}
+.days {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111;
+}
+.best {
+  font-size: 13px;
+  color: #6b7280;
+}
+.week {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+.dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #edE9fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+}
+.done {
+  background: #c4b5fd;
+}
+.today {
+  border: 2px solid #111;
+}

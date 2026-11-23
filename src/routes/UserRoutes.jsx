@@ -6,6 +6,8 @@ import RoutineDetail from "../pages/RoutineDetail";
 import Form from "../pages/Form";
 import Run from "../pages/Run";
 import Progress from "../pages/Progress";
+import RunDetail from "../pages/RunDetail";
+import HistoryDetail from "../pages/HistoryDetail";
 
 const UserRoutes = () => (
   <IonTabs>
@@ -27,6 +29,12 @@ const UserRoutes = () => (
       </Route>
       <Route exact path="/app">
         <Redirect to="/app/routines" />
+      </Route>
+      <Route exact path="/app/run/:id">
+        <RunDetail />
+      </Route>
+      <Route exact path="/app/history/:id">
+        <HistoryDetail />
       </Route>
     </IonRouterOutlet>
 
