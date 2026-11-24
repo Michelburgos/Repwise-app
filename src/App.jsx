@@ -1,6 +1,7 @@
 import { IonApp, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import AppRoutes from "./routes/AppRoutes";
+import OfflineNotice from "./components/OfflineNotice";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -15,13 +16,14 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 
-setupIonicReact();
+setupIonicReact({ mode: "md" });
 
 const App = () => (
   <IonApp>
     <IonReactRouter>
       <AppRoutes />
     </IonReactRouter>
+    <OfflineNotice />
   </IonApp>
 );
 

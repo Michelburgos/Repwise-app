@@ -1,29 +1,38 @@
-import { IonButton, IonIcon, IonItem, IonLabel } from "@ionic/react";
+import { IonIcon } from "@ionic/react";
 import { trashOutline } from "ionicons/icons";
+import { useNavigate } from "react-router-dom";
 import { formatDate } from "../helpers/helpers";
+import styles from "./RoutineCard.module.css";
 
 const RoutineCard = ({ routine, onDelete }) => {
+  const navigate = useNavigate();
+  const total = routine.exercises?.length ?? 0;
+
   return (
-    <IonItem routerLink={`/app/routines/${routine.id}`} routerDirection="forward" detail>
-      <IonLabel>
-        <h2>{routine.name}</h2>
-        <p>
-          {routine.exercises.length} ejercicios · {formatDate(routine.created_at)}
-        </p>
-      </IonLabel>
-      <IonButton
-        slot="end"
-        fill="clear"
-        color="danger"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onDelete(routine.id);
-        }}
+    <div className={styles.card}>
+      <button
+        type="button"
+        className={styles.main}
+        onClick={() => navigate(`/app/routines/${routine.id}`)}
+      >
+        <span className={styles.initial}>{routine.name.charAt(0).toUpperCase()}</span>
+        <span className={styles.info}>
+          <span className={styles.name}>{routine.name}</span>
+          <span className={styles.meta}>
+            {total} {total === 1 ? "ejercicio" : "ejercicios"} · {formatDate(routine.created_at)}
+          </span>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        className={styles.delete}
+        aria-label={`Eliminar ${routine.name}`}
+        onClick={() => onDelete(routine.id)}
       >
         <IonIcon icon={trashOutline} />
-      </IonButton>
-    </IonItem>
+      </button>
+    </div>
   );
 };
 

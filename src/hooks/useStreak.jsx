@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { dayKey } from "../helpers/helpers";
+import { mensajeError } from "../helpers/errors";
 
 const DAY = 86400000;
 const LABELS = ["L", "M", "X", "J", "V", "S", "D"];
@@ -44,20 +45,46 @@ const calcular = (rows) => {
 
 export const useStreak = () => {
   const [streak, setStreak] = useState({ current: 0, best: 0, week: [] });
+  const [error, setError] = useState("");
 
   const refrescar = async () => {
-    const [runs, sessions] = await Promise.all([
-      supabase.from("runs").select("created_at"),
-      supabase.from("workout_sessions").select("created_at"),
-    ]);
-    const result = calcular([...(runs.data ?? []), ...(sessions.data ?? [])]);
-    setStreak(result);
-    return result.current;
+    try {
+      const [runs, sessions] = await Promise.all([
+        supabase.from("runs").select("created_at"),
+        supabase.from("workout_sessions").select("created_at"),
+      ]);
+
+      const loadError = runs.error || sessions.error;
+      if (loadError) {
+        console.error(loadError);
+        setError(mensajeError(loadError));
+        return 0;
+      }
+
+      setError("");
+      const result = calcular([...(runs.data ?? []), ...(sessions.data ?? [])]);
+      setStreak(result);
+      return result.current;
+    } catch (err) {
+      console.error(err);
+      setError(mensajeError(err));
+      return 0;
+    }
   };
 
   useEffect(() => {
     refrescar();
   }, []);
 
-  return { ...streak, refrescar };
+  useEffect(() => {
+    const recargar = () => refrescar();
+    window.addEventListener("repwise:sessions-changed", recargar);
+    window.addEventListener("repwise:runs-changed", recargar);
+    return () => {
+      window.removeEventListener("repwise:sessions-changed", recargar);
+      window.removeEventListener("repwise:runs-changed", recargar);
+    };
+  }, []);
+
+  return { ...streak, refrescar, error };
 };

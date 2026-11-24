@@ -1,11 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { IonButton, IonInput, IonModal, IonText, IonToast } from "@ionic/react";
+import { IonIcon } from "@ionic/react";
+import {
+  alertCircle,
+  checkmarkCircle,
+  flame,
+  flashOutline,
+  hourglassOutline,
+  play,
+  pulseOutline,
+  scanOutline,
+  square,
+} from "ionicons/icons";
 import { useAccelerometer } from "../hooks/useAccelerometer";
 import { useHaptics } from "../hooks/useHaptics";
 import { useStreak } from "../hooks/useStreak";
 import { supabase } from "../lib/supabase";
 import { formatDuration, tempoLabel } from "../helpers/helpers";
-import styles from "./RepCounter.module.scss";
+import { mensajeError } from "../helpers/errors";
+import IconTile from "./IconTile";
+import StatGrid from "./StatGrid";
+import styles from "./RepCounter.module.css";
 
 const THRESHOLD = 6; // ajústalo según qué tan fuerte sea el movimiento
 
@@ -17,10 +31,13 @@ const RepCounter = ({ exerciseName = "" }) => {
   const [name, setName] = useState(exerciseName);
   const [active, setActive] = useState(false);
   const [reps, setReps] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
   const [feedback, setFeedback] = useState("Sujeta el teléfono o fíjalo a tu brazo");
   const [open, setOpen] = useState(false);
-  const [result, setResult] = useState({ duration: 0, avg: null });
+  const [result, setResult] = useState({ reps: 0, duration: 0, avg: null });
   const [toast, setToast] = useState("");
+  const [saveState, setSaveState] = useState("idle");
+  const [saveError, setSaveError] = useState("");
 
   const lastRep = useRef(0);
   const startTime = useRef(0);
@@ -31,27 +48,42 @@ const RepCounter = ({ exerciseName = "" }) => {
     if (exerciseName) setName(exerciseName);
   }, [exerciseName]);
 
+  // Cronómetro en vivo
+  useEffect(() => {
+    if (!active) return;
+    const interval = setInterval(() => {
+      setElapsed((Date.now() - startTime.current) / 1000);
+    }, 250);
+    return () => clearInterval(interval);
+  }, [active]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timeout = setTimeout(() => setToast(""), 3000);
+    return () => clearTimeout(timeout);
+  }, [toast]);
+
   useEffect(() => {
     if (!active) return;
     const now = Date.now();
 
     if (magnitude > THRESHOLD && now - lastRep.current > 500) {
-      const elapsed = lastRep.current ? now - lastRep.current : null;
+      const interval = lastRep.current ? now - lastRep.current : null;
       lastRep.current = now;
       setReps((r) => r + 1);
       impact("light");
 
-      if (elapsed) {
-        sum.current += elapsed;
+      if (interval) {
+        sum.current += interval;
         count.current += 1;
       }
 
-      if (elapsed && elapsed < 1000) {
+      if (interval && interval < 1000) {
         setFeedback("Muy rápido: controla el movimiento");
         vibrate(200);
-      } else if (elapsed && elapsed > 4000) {
+      } else if (interval && interval > 4000) {
         setFeedback("Muy lento: mantén un ritmo constante");
-      } else if (elapsed) {
+      } else if (interval) {
         setFeedback("Buen ritmo");
       }
     }
@@ -59,6 +91,7 @@ const RepCounter = ({ exerciseName = "" }) => {
 
   const iniciar = () => {
     setReps(0);
+    setElapsed(0);
     lastRep.current = 0;
     sum.current = 0;
     count.current = 0;
@@ -67,86 +100,271 @@ const RepCounter = ({ exerciseName = "" }) => {
     setActive(true);
   };
 
-  const terminar = () => {
+  const persistir = async (snapshot) => {
+    setSaveState("saving");
+    setSaveError("");
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setSaveState("error");
+        setSaveError("No hay una sesión activa. Vuelve a iniciar sesión.");
+        return;
+      }
+
+      const { error } = await supabase
+        .from("workout_sessions")
+        .insert({
+          user_id: user.id,
+          name: name.trim() || "Ejercicio libre",
+          reps: snapshot.reps,
+          duration_s: snapshot.duration,
+          avg_tempo_s: snapshot.avg,
+          feedback: tempoLabel(snapshot.avg),
+        })
+        .select()
+        .single();
+
+      if (error) {
+        setSaveState("error");
+        setSaveError(mensajeError(error));
+        return;
+      }
+
+      // Avisa a la lista de entrenamientos y a la racha aunque sigan montadas.
+      window.dispatchEvent(new CustomEvent("repwise:sessions-changed"));
+
+      const racha = await refrescar();
+      setSaveState("saved");
+      setToast(`¡Serie guardada! Racha de ${racha} ${racha === 1 ? "día" : "días"}`);
+    } catch (err) {
+      setSaveState("error");
+      setSaveError(mensajeError(err));
+    }
+  };
+
+  const terminar = async () => {
     setActive(false);
+
+    if (reps === 0) {
+      setOpen(false);
+      setToast("No se detectaron repeticiones. Intenta de nuevo.");
+      return;
+    }
+
     const duration = Math.round((Date.now() - startTime.current) / 1000);
     const avg = count.current ? sum.current / count.current / 1000 : null;
-    setResult({ duration, avg });
+    const snapshot = { reps, duration, avg };
+
+    setElapsed(duration);
+    setResult(snapshot);
     setOpen(true);
+    setActive(false);
+    await persistir(snapshot);
   };
 
-  const guardar = async () => {
-    const { error } = await supabase.from("workout_sessions").insert({
-      name: name.trim() || "Ejercicio libre",
-      reps,
-      duration_s: result.duration,
-      avg_tempo_s: result.avg,
-      feedback: tempoLabel(result.avg),
-    });
-    if (error) return alert(error.message);
-
-    const racha = await refrescar();
+  const cerrar = () => {
     setOpen(false);
-    setToast(`¡Serie guardada! Racha de ${racha} ${racha === 1 ? "día" : "días"}`);
+    setReps(0);
+    setElapsed(0);
+    setResult({ reps: 0, duration: 0, avg: null });
+    setSaveState("idle");
+    setSaveError("");
   };
+
+  const secondsPerRep = reps > 0 ? (elapsed / reps).toFixed(1) : null;
+
+  let view = {
+    title: active ? "Analizando…" : "Listo para empezar",
+    hint: active ? feedback : "Sujeta el teléfono o fíjalo a tu brazo y pulsa Iniciar serie.",
+    tone: "tint",
+    icon: scanOutline,
+    good: false,
+  };
+
+  if (feedback.startsWith("Muy rápido")) {
+    view = {
+      title: "Muy rápido",
+      hint: "Baja más despacio y controla el peso.",
+      tone: "ink",
+      icon: flashOutline,
+      good: false,
+    };
+  } else if (feedback.startsWith("Muy lento")) {
+    view = {
+      title: "Muy lento",
+      hint: "Sube con más energía, sin pausas largas.",
+      tone: "ink",
+      icon: hourglassOutline,
+      good: false,
+    };
+  } else if (feedback === "Buen ritmo") {
+    view = {
+      title: "Buen ritmo",
+      hint: "Mantén este tempo en cada repetición.",
+      tone: "purple",
+      icon: checkmarkCircle,
+      good: true,
+    };
+  } else if (feedback === "Empieza tu serie") {
+    view = {
+      title: "En marcha",
+      hint: "Empieza tu serie cuando estés listo.",
+      tone: "tint",
+      icon: pulseOutline,
+      good: false,
+    };
+  }
 
   return (
     <div className={styles.box}>
-      <IonInput
-        className={styles.input}
-        placeholder="Ejercicio (ej. Sentadilla)"
-        value={name}
-        onIonInput={(e) => setName(e.detail.value)}
-      />
+      <label className="rw-field">
+        <span className="rw-label">Ejercicio</span>
+        <input
+          className="rw-input"
+          placeholder="Ejercicio (ej. Sentadilla)"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </label>
 
-      <div className={styles.reps}>{reps}</div>
-      <IonText color="medium">repeticiones</IonText>
-      <p className={styles.feedback}>{feedback}</p>
+      <div className={styles.ringWrap}>
+        <div className={`${styles.ring} ${active ? "rw-animate-pulse" : ""}`}>
+          <div className={styles.ringInner}>
+            <p key={reps} className={`${styles.reps} rw-animate-rep`}>
+              {reps}
+            </p>
+            <p className={styles.repLabel}>repeticiones</p>
+          </div>
+        </div>
+
+        <div className={styles.pills}>
+          <span className={styles.pill}>{formatDuration(elapsed)}</span>
+          <span className={styles.pill}>
+            {secondsPerRep ? `${secondsPerRep} s/rep` : "-- s/rep"}
+          </span>
+        </div>
+      </div>
+
+      <div
+        aria-live="polite"
+        className={`${styles.feedback} ${view.good ? styles.feedbackGood : ""}`}
+      >
+        <IconTile tone={view.tone} size="lg">
+          <IonIcon icon={view.icon} />
+        </IconTile>
+        <div>
+          <p className={styles.feedbackTitle}>{view.title}</p>
+          <p className={styles.feedbackHint}>{view.hint}</p>
+        </div>
+      </div>
 
       {active ? (
-        <IonButton color="dark" expand="block" onClick={terminar}>
+        <button type="button" className="rw-btn rw-btn--destructive rw-btn--xl" onClick={terminar}>
+          <IonIcon icon={square} />
           Terminar serie
-        </IonButton>
+        </button>
       ) : (
-        <IonButton expand="block" onClick={iniciar}>
+        <button type="button" className="rw-btn rw-btn--primary rw-btn--xl" onClick={iniciar}>
+          <IonIcon icon={play} />
           Iniciar serie
-        </IonButton>
+        </button>
       )}
 
-      <IonModal
-        isOpen={open}
-        initialBreakpoint={0.5}
-        breakpoints={[0, 0.5]}
-        onDidDismiss={() => setOpen(false)}
-      >
-        <div className={styles.sheet}>
-          <h2>Serie terminada</h2>
-          <div className={styles.stats}>
-            <div>
-              <strong>{reps}</strong>
-              <span>repeticiones</span>
+      {open && (
+        <div
+          className="rw-overlay"
+          onClick={() => saveState !== "saving" && cerrar()}
+        >
+          <div className="rw-sheet" onClick={(e) => e.stopPropagation()}>
+            <div
+              className={`${styles.badge} ${
+                saveState === "error" ? styles.badgeError : ""
+              }`}
+            >
+              <IonIcon icon={saveState === "error" ? alertCircle : flame} />
+              <span>
+                {saveState === "saved"
+                  ? "¡Racha +1!"
+                  : saveState === "error"
+                    ? "Error al guardar"
+                    : "Guardando serie"}
+              </span>
             </div>
-            <div>
-              <strong>{formatDuration(result.duration)}</strong>
-              <span>tiempo</span>
-            </div>
-            <div>
-              <strong>{result.avg ? `${result.avg.toFixed(1)} s` : "--"}</strong>
-              <span>ritmo promedio</span>
-            </div>
-          </div>
-          <IonButton expand="block" disabled={reps === 0} onClick={guardar}>
-            Guardar
-          </IonButton>
-        </div>
-      </IonModal>
 
-      <IonToast
-        isOpen={!!toast}
-        message={toast}
-        duration={2500}
-        onDidDismiss={() => setToast("")}
-      />
+            <h2 className={styles.sheetTitle}>
+              {saveState === "saved"
+                ? "Serie guardada"
+                : saveState === "error"
+                  ? "No se pudo guardar"
+                  : "Serie completada"}
+            </h2>
+            <p className={styles.sheetSub}>
+              {name.trim() || "Ejercicio libre"} · {result.reps} repeticiones
+            </p>
+
+            <div className={styles.stats}>
+              <StatGrid
+                stats={[
+                  { label: "reps", value: String(result.reps), unit: "repeticiones" },
+                  { label: "tiempo", value: formatDuration(result.duration), unit: "tiempo" },
+                  {
+                    label: "ritmo",
+                    value: result.avg ? `${result.avg.toFixed(1)} s` : "--",
+                    unit: "ritmo por rep",
+                  },
+                ]}
+              />
+            </div>
+
+            {saveError && <p className={styles.error}>{saveError}</p>}
+
+            {saveState === "saved" && (
+              <button
+                type="button"
+                className={`${styles.save} rw-btn rw-btn--primary rw-btn--xl`}
+                onClick={cerrar}
+              >
+                Listo
+              </button>
+            )}
+
+            {saveState === "error" && (
+              <div className={styles.actions}>
+                <button
+                  type="button"
+                  className="rw-btn rw-btn--primary"
+                  onClick={() => persistir(result)}
+                >
+                  Reintentar
+                </button>
+                <button
+                  type="button"
+                  className="rw-btn rw-btn--outline"
+                  onClick={cerrar}
+                >
+                  Cerrar
+                </button>
+              </div>
+            )}
+
+            {saveState === "saving" && (
+              <button
+                type="button"
+                className={`${styles.save} rw-btn rw-btn--primary rw-btn--xl`}
+                disabled
+              >
+                Guardando…
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {toast && <div className="rw-toast">{toast}</div>}
     </div>
   );
 };

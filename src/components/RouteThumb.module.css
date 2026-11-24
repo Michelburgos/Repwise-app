@@ -1,0 +1,21 @@
+.thumb {
+  display: block;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  color: var(--rw-muted);
+  font-size: 22px;
+}

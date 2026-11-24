@@ -1,0 +1,50 @@
+.tile {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+}
+
+.tile ion-icon {
+  font-size: 20px;
+}
+
+.purple {
+  background: var(--rw-primary);
+  color: var(--rw-ink);
+}
+
+.tint {
+  background: var(--rw-tint);
+  color: var(--rw-ink);
+}
+
+.ink {
+  background: var(--rw-ink);
+  color: #fff;
+}
+
+.sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+}
+
+.sm ion-icon {
+  font-size: 16px;
+}
+
+.md {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+}
+
+.lg {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+}
+
+.lg ion-icon {
+  font-size: 24px;
+}

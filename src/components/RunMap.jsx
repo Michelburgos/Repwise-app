@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { MapContainer, Marker, Polyline, TileLayer, useMap } from "react-leaflet";
+import { IonIcon } from "@ionic/react";
+import { locationOutline } from "ionicons/icons";
+import { CircleMarker, MapContainer, Polyline, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import styles from "./RunMap.module.scss";
+import styles from "./RunMap.module.css";
 
 const RecenterMap = ({ position }) => {
   const map = useMap();
@@ -12,26 +14,38 @@ const RecenterMap = ({ position }) => {
   return null;
 };
 
-const RunMap = ({ position, path }) => {
-  return position ? (
-    <MapContainer
-      center={[position.latitude, position.longitude]}
-      zoom={18}
-      className={styles.map}
-    >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <RecenterMap position={position} />
-      <Marker position={[position.latitude, position.longitude]} />
-      <Polyline positions={path} />
-    </MapContainer>
-  ) : (
-    <div
-      className={styles.map}
-      style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-    >
-      <p>Obteniendo ubicación...</p>
-    </div>
-  );
-};
+const RunMap = ({ position, path }) => (
+  <div className={styles.wrap}>
+    {position ? (
+      <MapContainer
+        center={[position.latitude, position.longitude]}
+        zoom={18}
+        zoomControl={false}
+        className={styles.map}
+      >
+        <TileLayer
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+          attribution='Tiles &copy; <a href="https://www.esri.com/">Esri</a>'
+          maxZoom={19}
+        />
+        <RecenterMap position={position} />
+        <CircleMarker
+          center={[position.latitude, position.longitude]}
+          radius={8}
+          pathOptions={{ color: "#111111", weight: 3, fillColor: "#c4b5fd", fillOpacity: 1 }}
+        />
+        <Polyline
+          positions={path}
+          pathOptions={{ color: "#111111", weight: 5, opacity: 0.9 }}
+        />
+      </MapContainer>
+    ) : (
+      <div className={`${styles.map} ${styles.placeholder} rw-map-grid`}>
+        <IonIcon icon={locationOutline} />
+        <p>Obteniendo ubicación...</p>
+      </div>
+    )}
+  </div>
+);
 
 export default RunMap;

@@ -30,6 +30,11 @@ export const formatDate = (iso) =>
     year: 'numeric',
   });
 
+export const formatShortDate = (iso) =>
+  new Date(iso)
+    .toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })
+    .replace('.', '');
+
 export const dayKey = (d) => new Date(d).toLocaleDateString("en-CA"); // YYYY-MM-DD local
 
 export const tempoLabel = (avg) => {
@@ -37,4 +42,18 @@ export const tempoLabel = (avg) => {
   if (avg < 1) return "Muy rápido";
   if (avg > 4) return "Muy lento";
   return "Buen ritmo";
+};
+
+/** "Sentadilla 4x10" -> { name: "Sentadilla", sets: 4, reps: 10 }. Defaults to 3x10. */
+export const parseExerciseLine = (line) => {
+  const match = line.match(/(\d+)\s*[x×]\s*(\d+)/i);
+  const name = line
+    .replace(/(\d+)\s*[x×]\s*(\d+)/i, "")
+    .replace(/[-–:·]+\s*$/, "")
+    .trim();
+  return {
+    name: name || line.trim(),
+    sets: match ? Number(match[1]) : 3,
+    reps: match ? Number(match[2]) : 10,
+  };
 };

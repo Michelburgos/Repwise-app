@@ -1,36 +1,45 @@
 import { IonIcon } from "@ionic/react";
 import { checkmark, flame } from "ionicons/icons";
-import styles from "./StreakCard.module.scss";
+import styles from "./StreakCard.module.css";
 
-const plural = (n) => (n === 1 ? "día" : "días");
+function StreakCard({ current, best, week = [] }) {
+  const days = week.map((day) => ({
+    ...day,
+    status: day.done ? "done" : day.today ? "today" : "pending",
+  }));
 
-const StreakCard = ({ current, best, week }) => (
-  <div className={styles.card}>
-    <div className={styles.top}>
-      <IonIcon icon={flame} className={styles.flame} />
-      <div>
-        <div className={styles.days}>
-          {current} {plural(current)} de racha
+  return (
+    <section className={styles.card}>
+      <div className={styles.blob} aria-hidden />
+
+      <div className={styles.top}>
+        <div className={styles.flameWrap}>
+          <IonIcon icon={flame} className={`${styles.flame} rw-animate-flame`} aria-hidden />
         </div>
-        <div className={styles.best}>
-          Mejor racha: {best} {plural(best)}
+        <div>
+          <p className={styles.current}>{current}</p>
+          <p className={styles.currentLabel}>días de racha</p>
         </div>
       </div>
-    </div>
 
-    <div className={styles.week}>
-      {week.map((d, i) => (
-        <div key={i} className={styles.day}>
-          <span>{d.label}</span>
-          <div
-            className={`${styles.dot} ${d.done ? styles.done : ""} ${d.today ? styles.today : ""}`}
-          >
-            {d.done && <IonIcon icon={checkmark} />}
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
+      <ol className={styles.week} aria-label="Semana actual">
+        {days.map((day, index) => (
+          <li key={`${day.label}-${index}`} className={styles.day}>
+            <span className={`${styles.dot} ${styles[day.status]}`}>
+              {day.status === "done" && <IonIcon icon={checkmark} />}
+            </span>
+            <span className={`${styles.dayLabel} ${day.status === "today" ? styles.todayLabel : ""}`}>
+              {day.label}
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <p className={styles.best}>
+        Mejor racha: <span>{best} días</span>
+      </p>
+    </section>
+  );
+}
 
 export default StreakCard;

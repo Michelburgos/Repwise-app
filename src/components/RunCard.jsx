@@ -1,22 +1,32 @@
-import { IonIcon, IonItem, IonLabel } from "@ionic/react";
-import { chevronForward, trailSignOutline } from "ionicons/icons";
+import { IonIcon } from "@ionic/react";
+import { chevronForward } from "ionicons/icons";
+import { useNavigate } from "react-router-dom";
 import { formatDate, formatDuration, formatPace } from "../helpers/helpers";
-import styles from "./RunCard.module.scss";
+import RouteThumb from "./RouteThumb";
+import styles from "./RunCard.module.css";
 
-const RunCard = ({ run }) => (
-  <IonItem routerLink={`/app/run/${run.id}`} routerDirection="forward" lines="none" className={styles.card}>
-    <div slot="start" className={styles.tile}>
-      <IonIcon icon={trailSignOutline} />
-    </div>
-    <IonLabel>
-      <p>{formatDate(run.created_at)}</p>
-      <h2 className={styles.km}>{(run.distance_m / 1000).toFixed(2)} km</h2>
-      <p>
-        {formatDuration(run.duration_s)} · {formatPace(run.distance_m, run.duration_s)}
-      </p>
-    </IonLabel>
-    <IonIcon slot="end" icon={chevronForward} />
-  </IonItem>
-);
+const RunCard = ({ run }) => {
+  const navigate = useNavigate();
+
+  return (
+    <button
+      type="button"
+      className={styles.card}
+      onClick={() => navigate(`/app/run/${run.id}`)}
+    >
+      <RouteThumb path={run.path} />
+
+      <span className={styles.info}>
+        <span className={styles.date}>{formatDate(run.created_at)}</span>
+        <span className={styles.km}>{(run.distance_m / 1000).toFixed(2)} km</span>
+        <span className={styles.meta}>
+          {formatDuration(run.duration_s)} · {formatPace(run.distance_m, run.duration_s)}
+        </span>
+      </span>
+
+      <IonIcon icon={chevronForward} className={styles.chevron} />
+    </button>
+  );
+};
 
 export default RunCard;

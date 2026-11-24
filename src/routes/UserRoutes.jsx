@@ -1,62 +1,21 @@
-import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/react";
-import { barbellOutline, cameraOutline, footstepsOutline, pulseOutline } from "ionicons/icons";
-import { Redirect, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import Routines from "../pages/Routines";
 import RoutineDetail from "../pages/RoutineDetail";
 import Form from "../pages/Form";
 import Run from "../pages/Run";
-import Progress from "../pages/Progress";
 import RunDetail from "../pages/RunDetail";
+import Progress from "../pages/Progress";
 import HistoryDetail from "../pages/HistoryDetail";
 
-const UserRoutes = () => (
-  <IonTabs>
-    <IonRouterOutlet>
-      <Route exact path="/app/routines">
-        <Routines />
-      </Route>
-      <Route exact path="/app/routines/:id">
-        <RoutineDetail />
-      </Route>
-      <Route exact path="/app/form">
-        <Form />
-      </Route>
-      <Route exact path="/app/run">
-        <Run />
-      </Route>
-      <Route exact path="/app/progress">
-        <Progress />
-      </Route>
-      <Route exact path="/app">
-        <Redirect to="/app/routines" />
-      </Route>
-      <Route exact path="/app/run/:id">
-        <RunDetail />
-      </Route>
-      <Route exact path="/app/history/:id">
-        <HistoryDetail />
-      </Route>
-    </IonRouterOutlet>
-
-    <IonTabBar slot="bottom">
-      <IonTabButton tab="routines" href="/app/routines">
-        <IonIcon icon={barbellOutline} />
-        <IonLabel>Rutinas</IonLabel>
-      </IonTabButton>
-      <IonTabButton tab="form" href="/app/form">
-        <IonIcon icon={pulseOutline} />
-        <IonLabel>Técnica</IonLabel>
-      </IonTabButton>
-      <IonTabButton tab="run" href="/app/run">
-        <IonIcon icon={footstepsOutline} />
-        <IonLabel>Correr</IonLabel>
-      </IonTabButton>
-      <IonTabButton tab="progress" href="/app/progress">
-        <IonIcon icon={cameraOutline} />
-        <IonLabel>Progreso</IonLabel>
-      </IonTabButton>
-    </IonTabBar>
-  </IonTabs>
-);
+// Rutas privadas de la app. AppRoutes solo las monta cuando hay sesión.
+const UserRoutes = [
+  <Route key="routines" path="/app/routines" element={<Routines />} />,
+  <Route key="routine-detail" path="/app/routines/:id" element={<RoutineDetail />} />,
+  <Route key="form" path="/app/form" element={<Form />} />,
+  <Route key="run" path="/app/run" element={<Run />} />,
+  <Route key="run-detail" path="/app/run/:id" element={<RunDetail />} />,
+  <Route key="progress" path="/app/progress" element={<Progress />} />,
+  <Route key="history-detail" path="/app/history/:id" element={<HistoryDetail />} />,
+];
 
 export default UserRoutes;

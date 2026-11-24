@@ -1,0 +1,39 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.cell {
+  padding: 12px;
+  border-radius: 18px;
+  background: var(--rw-card);
+  box-shadow: var(--rw-shadow-card);
+  text-align: center;
+  min-width: 0;
+}
+
+.value {
+  overflow: hidden;
+  color: var(--rw-ink);
+  font-family: var(--rw-display);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.unit {
+  margin-top: 6px;
+  overflow: hidden;
+  color: var(--rw-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

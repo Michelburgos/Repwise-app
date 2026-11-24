@@ -1,2 +1,580 @@
-/* For information on how to create your own theme, please refer to:
-http://ionicframework.com/docs/theming/ */
+/* ============================================================
+   Repwise — Design system
+   Portado del proyecto de diseño (repwise-ruta-y-ritmo):
+   morado, tint, ink, grises y rojo solo para eliminar/detener.
+   ============================================================ */
+
+:root {
+  --rw-bg: #f8f7fc;
+  --rw-card: #ffffff;
+  --rw-primary: #c4b5fd;
+  --rw-primary-strong: #a78bfa;
+  --rw-tint: #ede9fe;
+  --rw-ink: #111111;
+  --rw-ink-soft: #1c1c1f;
+  --rw-muted: #6b7280;
+  --rw-border: #e5e3ef;
+  --rw-destructive: #e5484d;
+  --rw-radius: 1.25rem;
+
+  --rw-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --rw-display: "Bricolage Grotesque", "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --rw-shadow-card: 0 1px 2px rgba(17, 17, 17, 0.04), 0 8px 24px -12px rgba(91, 33, 182, 0.18);
+  --rw-shadow-float: 0 12px 32px -8px rgba(17, 17, 17, 0.35);
+  --rw-shadow-glow: 0 0 0 10px #ede9fe, 0 24px 60px -16px rgba(139, 92, 246, 0.55);
+
+  --rw-safe-top: env(safe-area-inset-top, 0px);
+  --rw-safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: light;
+
+  /* Ionic */
+  --ion-font-family: var(--rw-sans);
+  --ion-background-color: var(--rw-bg);
+  --ion-background-color-rgb: 248, 247, 252;
+  --ion-text-color: var(--rw-ink);
+  --ion-text-color-rgb: 17, 17, 17;
+  --ion-color-primary: #c4b5fd;
+  --ion-color-primary-rgb: 196, 181, 253;
+  --ion-color-primary-contrast: #111111;
+  --ion-color-primary-contrast-rgb: 17, 17, 17;
+  --ion-color-primary-shade: #aca0de;
+  --ion-color-primary-tint: #cabdfd;
+  --ion-color-danger: #e5484d;
+  --ion-color-danger-rgb: 229, 72, 77;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ca3f44;
+  --ion-color-danger-tint: #e85a5f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--rw-bg);
+  color: var(--rw-ink);
+  font-family: var(--rw-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+ion-app,
+ion-content {
+  --background: var(--rw-bg);
+  background: var(--rw-bg);
+  color: var(--rw-ink);
+  font-family: var(--rw-sans);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--rw-display);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+/* ---------- Layout ---------- */
+
+.rw-page {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding-top: 0;
+}
+
+.rw-page--tabs {
+  padding-bottom: calc(112px + var(--rw-safe-bottom));
+}
+
+.rw-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 20px;
+}
+
+.rw-main--tight {
+  gap: 10px;
+}
+
+.rw-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.rw-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--rw-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rw-muted {
+  color: var(--rw-muted);
+}
+
+.rw-display {
+  font-family: var(--rw-display);
+  letter-spacing: -0.03em;
+}
+
+.rw-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Cards & panels ---------- */
+
+.rw-card {
+  background: var(--rw-card);
+  border-radius: 24px;
+  box-shadow: var(--rw-shadow-card);
+}
+
+.rw-panel {
+  padding: 20px;
+  background: var(--rw-card);
+  border-radius: 24px;
+  box-shadow: var(--rw-shadow-card);
+}
+
+.rw-divider {
+  height: 1px;
+  background: var(--rw-border);
+  border: 0;
+  margin: 0;
+}
+
+/* ---------- Buttons ---------- */
+
+.rw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--rw-primary);
+  color: var(--rw-ink);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+
+.rw-btn:active {
+  transform: scale(0.98);
+}
+
+.rw-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.rw-btn ion-icon {
+  font-size: 18px;
+}
+
+.rw-btn--primary {
+  background: var(--rw-primary);
+  color: var(--rw-ink);
+}
+
+.rw-btn--primary:hover {
+  filter: brightness(0.96);
+}
+
+.rw-btn--outline {
+  background: var(--rw-card);
+  border: 1px solid var(--rw-border);
+  color: var(--rw-ink);
+}
+
+.rw-btn--outline:hover {
+  background: var(--rw-tint);
+}
+
+.rw-btn--secondary {
+  background: var(--rw-tint);
+  color: var(--rw-ink);
+}
+
+.rw-btn--ink {
+  background: var(--rw-ink);
+  color: #fff;
+}
+
+.rw-btn--ink:hover {
+  opacity: 0.9;
+}
+
+.rw-btn--destructive {
+  background: var(--rw-destructive);
+  color: #fff;
+}
+
+.rw-btn--destructive-outline {
+  background: var(--rw-card);
+  border: 2px solid var(--rw-destructive);
+  color: var(--rw-destructive);
+}
+
+.rw-btn--destructive-outline:hover {
+  background: rgba(229, 72, 77, 0.05);
+}
+
+.rw-btn--ghost {
+  background: transparent;
+  color: var(--rw-ink);
+}
+
+.rw-btn--ghost:hover {
+  background: var(--rw-tint);
+}
+
+.rw-btn--xl {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 24px;
+  font-size: 16px;
+  border-radius: 18px;
+}
+
+.rw-btn--sm {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.rw-btn--icon {
+  width: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 12px;
+}
+
+.rw-btn--round {
+  border-radius: 999px;
+}
+
+/* ---------- Forms ---------- */
+
+.rw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rw-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--rw-ink);
+}
+
+.rw-input,
+.rw-textarea {
+  width: 100%;
+  border: 1px solid var(--rw-border);
+  border-radius: 16px;
+  background: var(--rw-card);
+  color: var(--rw-ink);
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rw-input {
+  height: 48px;
+  padding: 0 16px;
+}
+
+.rw-textarea {
+  min-height: 88px;
+  padding: 12px 16px;
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.rw-input::placeholder,
+.rw-textarea::placeholder {
+  color: var(--rw-muted);
+}
+
+.rw-input:focus,
+.rw-textarea:focus {
+  border-color: var(--rw-primary);
+  box-shadow: 0 0 0 4px var(--rw-tint);
+}
+
+/* ---------- Overlay / bottom sheet ---------- */
+
+.rw-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(17, 17, 17, 0.45);
+  animation: rw-fade-in 0.18s ease-out;
+}
+
+.rw-overlay--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.rw-sheet {
+  width: 100%;
+  max-width: 430px;
+  padding: 24px 20px calc(28px + var(--rw-safe-bottom));
+  border-radius: 32px 32px 0 0;
+  background: var(--rw-card);
+  animation: rw-slide-up 0.25s ease-out;
+}
+
+.rw-dialog {
+  width: calc(100% - 40px);
+  max-width: 340px;
+  margin: auto;
+  padding: 22px;
+  border-radius: 24px;
+  background: var(--rw-card);
+  animation: rw-pop-in 0.18s ease-out;
+}
+
+/* ---------- Toast ---------- */
+
+.rw-toast {
+  position: fixed;
+  top: calc(16px + var(--rw-safe-top));
+  left: 50%;
+  z-index: 1400;
+  transform: translateX(-50%);
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--rw-ink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--rw-shadow-float);
+  animation: rw-fade-in 0.18s ease-out;
+  white-space: nowrap;
+  max-width: calc(100vw - 32px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rw-offline {
+  position: fixed;
+  top: calc(12px + var(--rw-safe-top));
+  left: 50%;
+  z-index: 4000;
+  width: calc(100% - 32px);
+  max-width: 398px;
+  transform: translateX(-50%);
+  padding: 11px 16px;
+  border-radius: 14px;
+  background: var(--rw-ink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: var(--rw-shadow-float);
+  animation: rw-fade-in 0.18s ease-out;
+}
+
+.rw-offline--ok {
+  background: var(--rw-primary);
+  color: var(--rw-ink);
+}
+
+/* ---------- Utils ---------- */
+
+.rw-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.rw-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.rw-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rw-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rw-scroll-x {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.rw-scroll-x::-webkit-scrollbar {
+  display: none;
+}
+
+.rw-map-grid {
+  background-color: var(--rw-tint);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.rw-loading {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  color: var(--rw-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rw-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--rw-bg);
+  color: var(--rw-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rw-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--rw-tint);
+  border-top-color: var(--rw-primary);
+  border-radius: 50%;
+  animation: rw-spin 0.8s linear infinite;
+}
+
+@keyframes rw-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes rep-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(196, 181, 253, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 28px rgba(196, 181, 253, 0);
+  }
+}
+
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: rotate(-3deg) scale(1);
+  }
+  50% {
+    transform: rotate(3deg) scale(1.05);
+  }
+}
+
+@keyframes rw-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rw-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes rw-pop-in {
+  from {
+    transform: scale(0.94);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.rw-animate-rep {
+  animation: rep-pop 0.35s ease-out;
+}
+
+.rw-animate-flame {
+  animation: flame-flicker 2.4s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+
+.rw-animate-pulse {
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+/* Ionic page content should sit above nothing else */
+ion-router-outlet {
+  background: var(--rw-bg);
+}

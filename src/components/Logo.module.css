@@ -1,0 +1,63 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 16px;
+  background: var(--rw-primary);
+  color: var(--rw-ink);
+}
+
+.markLg {
+  width: 64px;
+  height: 64px;
+  border-radius: 24px;
+}
+
+.letter {
+  font-family: var(--rw-display);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.letterLg {
+  font-size: 38px;
+}
+
+.dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rw-ink);
+}
+
+.dotLg {
+  top: 13px;
+  right: 13px;
+  width: 10px;
+  height: 10px;
+}
+
+.wordmark {
+  font-family: var(--rw-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--rw-ink);
+}
+
+.wordmarkLg {
+  font-size: 36px;
+}

@@ -1,0 +1,24 @@
+.dialogTitle {
+  color: var(--rw-ink);
+  font-family: var(--rw-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.dialogText {
+  margin-top: 8px;
+  color: var(--rw-muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.dialogActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.dialogActions > button {
+  flex: 1;
+}

@@ -1,22 +1,36 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { mensajeError } from "../helpers/errors";
 
 export const useRuns = () => {
   const [runs, setRuns] = useState([]);
+  const [error, setError] = useState("");
 
   const cargar = async () => {
-    const { data, error } = await supabase
-      .from("runs")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(20);
-    if (error) console.error(error);
-    else setRuns(data);
+    try {
+      const { data, error: loadError } = await supabase
+        .from("runs")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(20);
+
+      if (loadError) {
+        console.error(loadError);
+        setError(mensajeError(loadError));
+        return;
+      }
+
+      setError("");
+      setRuns(data ?? []);
+    } catch (err) {
+      console.error(err);
+      setError(mensajeError(err));
+    }
   };
 
   useEffect(() => {
     cargar();
   }, []);
 
-  return { runs, cargar };
+  return { runs, cargar, error };
 };
