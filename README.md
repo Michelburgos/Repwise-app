@@ -11,9 +11,9 @@ Aplicación móvil de entrenamiento desarrollada con **Ionic + React + Capacitor
 
 ## Integrantes
 
-| Integrante | Rama de trabajo |
-|---|---|
-| Juan David Daza | `juan-david-daza` |
+| Integrante           | Rama de trabajo        |
+| -------------------- | ---------------------- |
+| Juan David Daza      | `juan-david-daza`      |
 | Michel Burgos Santos | `michel-burgos-santos` |
 
 Las ramas se integran sobre `main` para la entrega final.
@@ -133,15 +133,15 @@ Resumen de tablas:
 
 ## APIs y servicios consumidos
 
-| Servicio | Uso |
-|---|---|
-| Firebase Authentication | Registro, login y sesión |
-| Supabase Auth | Sesión de datos para RLS |
-| Supabase PostgREST | CRUD de rutinas, series, carreras y fotos |
-| Supabase Storage | Fotos de progreso |
-| Supabase Realtime | Actualización de rutinas |
-| Esri World Street Map | Tiles del mapa de carreras |
-| OpenStreetMap | Datos base del mapa |
+| Servicio                | Uso                                       |
+| ----------------------- | ----------------------------------------- |
+| Firebase Authentication | Registro, login y sesión                  |
+| Supabase Auth           | Sesión de datos para RLS                  |
+| Supabase PostgREST      | CRUD de rutinas, series, carreras y fotos |
+| Supabase Storage        | Fotos de progreso                         |
+| Supabase Realtime       | Actualización de rutinas                  |
+| Esri World Street Map   | Tiles del mapa de carreras                |
+| OpenStreetMap           | Datos base del mapa                       |
 
 ## Scripts
 
@@ -163,10 +163,6 @@ npm run lint         # ESLint
 - `/app/progress`
 - `/app/history/:id`
 - `/admin` (solo administradores)
-
-## Aportes y ramas
-
-Cada integrante trabaja en su rama (`juan-david-daza`, `michel-burgos-santos`) y los cambios se integran en `main` mediante merge. Antes de entregar, verifica que `main` contenga la versión final y que el repositorio esté actualizado en GitHub.
 
 ## Limitaciones conocidas
 
