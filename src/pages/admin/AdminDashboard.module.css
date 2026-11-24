@@ -1,0 +1,96 @@
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.label {
+  color: var(--rw-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.email {
+  margin-top: 2px;
+  color: var(--rw-ink);
+  font-size: 16px;
+  font-weight: 800;
+  word-break: break-all;
+}
+
+.uid {
+  margin-top: 4px;
+  color: var(--rw-muted);
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  color: var(--rw-ink);
+  font-family: var(--rw-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  padding: 0 4px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 20px;
+  background: var(--rw-card);
+  box-shadow: var(--rw-shadow-card);
+  color: var(--rw-ink);
+  text-decoration: none;
+}
+
+.link span {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.link strong {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.link small {
+  margin-top: 2px;
+  color: var(--rw-muted);
+  font-size: 12px;
+}
+
+.open {
+  color: var(--rw-muted);
+  font-size: 18px;
+}
+
+.note {
+  padding: 14px;
+  border: 1px dashed var(--rw-border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--rw-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.note code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--rw-tint);
+  color: var(--rw-ink);
+  font-size: 12px;
+}

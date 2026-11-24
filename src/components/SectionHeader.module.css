@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.title {
+  color: var(--rw-ink);
+  font-family: var(--rw-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.action {
+  padding: 4px 12px;
+  border-radius: 999px;
+  color: var(--rw-muted);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.action:hover {
+  background: var(--rw-tint);
+  color: var(--rw-ink);
+}

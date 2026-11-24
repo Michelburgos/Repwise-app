@@ -1,0 +1,21 @@
+{
+  "short_name": "Repwise",
+  "name": "Repwise — Entrena con cabeza",
+  "icons": [
+    {
+      "src": "assets/icon/favicon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon/icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#F8F7FC",
+  "background_color": "#F8F7FC"
+}

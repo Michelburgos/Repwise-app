@@ -1,0 +1,36 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pill ion-icon {
+  font-size: 14px;
+}
+
+.tint {
+  background: var(--rw-tint);
+  color: var(--rw-ink);
+}
+
+.purple {
+  background: var(--rw-primary);
+  color: var(--rw-ink);
+}
+
+.ink {
+  background: var(--rw-ink);
+  color: #fff;
+}
+
+.outline {
+  border: 1px solid var(--rw-border);
+  background: var(--rw-card);
+  color: var(--rw-muted);
+}
